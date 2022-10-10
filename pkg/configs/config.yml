@@ -1,0 +1,8 @@
+app:
+  port: 8000
+bd:
+  user: user
+  pass: pass
+  name: testdb_task
+  port: 5432
+  host: postgres
