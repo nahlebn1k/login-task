@@ -12,6 +12,6 @@ func SignUp(w http.ResponseWriter, r *http.Request) {
 	if err := json.NewDecoder(r.Body).Decode(&user); err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 	}
-	w.Write([]byte("OK"))
 	storage.CreateUser(user.Login, user.Password)
+	w.Write([]byte("OK"))
 }

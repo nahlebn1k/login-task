@@ -13,11 +13,11 @@ func main() {
 	config := configs.GetConfig()
 	fs := http.FileServer(http.Dir("web/static"))
 	router := mux.NewRouter()
+	router.HandleFunc("/signup", handlers.SignUp).Methods("POST")
 	router.PathPrefix("/").Handler(fs)
-	router.HandleFunc("/sign-up", handlers.SignUp).Methods("POST")
 	handler := cors.Default().Handler(router)
 
-	if err := http.ListenAndServe(":"+config.App.Port, handler); err != nil {
+	if err := http.ListenAndServe(":"+config.AppPort, handler); err != nil {
 		log.Fatal("Server error!")
 	}
 }

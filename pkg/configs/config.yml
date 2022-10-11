@@ -1,8 +1,6 @@
-app:
-  port: 8000
-bd:
-  user: postgres
-  pass: postgres
-  name: userdb_task
-  port: 5432
-  host: localhost
+appPort: "8000"
+dbUser: "postgres"
+dbPass: "postgres"
+dbName: "userdb_task"
+dbPort: "5432"
+dbHost: "localhost"

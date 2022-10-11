@@ -10,12 +10,13 @@ import (
 func OpenDBConn() *sql.DB {
 	config := configs.GetConfig()
 	connStr := fmt.Sprintf("postgres://%s:%s@%s:%s/%s?sslmode=disable",
-		config.DB.User, config.DB.Pass, config.DB.Host, config.DB.Port, config.DB.Name)
+		config.DBUser, config.DBPass, config.DBHost, config.DBPort, config.DBName)
 	db, err := sql.Open("postgres", connStr)
 	if err != nil {
 		panic(err)
 	}
-	if err = db.Ping(); err != nil {
+	err = db.Ping()
+	if err != nil {
 		panic(err)
 	}
 	return db

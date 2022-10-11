@@ -1,12 +1,13 @@
 package storage
 
 import (
+	"fmt"
 	"log"
 	"login-task/pkg/postgres"
 )
 
 func GetUser(login, password string) {
-
+	fmt.Print("test")
 }
 
 func CreateUser(login, password string) {

@@ -6,16 +6,12 @@ import (
 )
 
 type Config struct {
-	App struct {
-		Port string
-	}
-	DB struct {
-		User string
-		Pass string
-		Name string
-		Port string
-		Host string
-	}
+	AppPort string `yaml:"appPort"`
+	DBUser  string `yaml:"dbUser"`
+	DBPass  string `yaml:"dbPass"`
+	DBName  string `yaml:"dbName"`
+	DBPort  string `yaml:"dbPort"`
+	DBHost  string `yaml:"dbHost"`
 }
 
 func InitConfig() error {
@@ -30,7 +26,8 @@ func GetConfig() *Config {
 	if err := InitConfig(); err != nil {
 		log.Fatal("cant init config file!")
 	}
-	if err := viper.Unmarshal(&config); err != nil {
+	config = &Config{}
+	if err := viper.Unmarshal(config); err != nil {
 		log.Fatal("unable to decode config in struct!")
 	}
 	return config
