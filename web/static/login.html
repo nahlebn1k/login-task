@@ -5,14 +5,16 @@
     <title>Title</title>
 </head>
 <body>
-<form method="post" id="input-form">
-    <label for="user-login">Login</label>
-    <input type="text" id="user-login">
-    <label for="user-pass">Password</label>
-    <input type="text" id="user-pass">
-    <label for="remember-me">Remember me: </label>
-    <input type="checkbox" id="remember-me">
-    <input type="submit">
+<script src="logic.js"></script>
+<h1>SIGN IN</h1>
+<form method="post" id="log-form">
+  <label for="log-login">Login</label>
+  <input type="text" id="log-login">
+  <label for="log-pass">Password</label>
+  <input type="text" id="log-pass">
+  <label for="remember-me">Remember me: </label>
+  <input type="checkbox" id="remember-me">
+  <input type="submit" onclick="SignIn()">
 </form>
 </body>
 </html>

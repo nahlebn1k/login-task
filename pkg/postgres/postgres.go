@@ -1,17 +1,17 @@
 package postgres
 
 import (
-	"database/sql"
 	"fmt"
+	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq"
 	"login-task/pkg/configs"
 )
 
-func OpenDBConn() *sql.DB {
+func OpenDBConn() *sqlx.DB {
 	config := configs.GetConfig()
 	connStr := fmt.Sprintf("postgres://%s:%s@%s:%s/%s?sslmode=disable",
 		config.DBUser, config.DBPass, config.DBHost, config.DBPort, config.DBName)
-	db, err := sql.Open("postgres", connStr)
+	db, err := sqlx.Connect("postgres", connStr)
 	if err != nil {
 		panic(err)
 	}

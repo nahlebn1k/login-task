@@ -14,6 +14,7 @@ func main() {
 	fs := http.FileServer(http.Dir("web/static"))
 	router := mux.NewRouter()
 	router.HandleFunc("/signup", handlers.SignUp).Methods("POST")
+	router.HandleFunc("/signin", handlers.SingIn).Methods("POST")
 	router.PathPrefix("/").Handler(fs)
 	handler := cors.Default().Handler(router)
 
