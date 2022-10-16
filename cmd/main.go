@@ -15,9 +15,9 @@ func main() {
 	router := mux.NewRouter()
 	router.HandleFunc("/signup", handlers.SignUp).Methods("POST")
 	router.HandleFunc("/signin", handlers.SingIn).Methods("POST")
+	router.HandleFunc("/api", handlers.UserAuth).Methods("POST")
 	router.PathPrefix("/").Handler(fs)
 	handler := cors.Default().Handler(router)
-
 	if err := http.ListenAndServe(":"+config.AppPort, handler); err != nil {
 		log.Fatal("Server error!")
 	}
