@@ -3,6 +3,8 @@ package jwt
 import (
 	"errors"
 	"github.com/golang-jwt/jwt"
+	"login-task/pkg/configs"
+	"login-task/pkg/user/storage"
 	"strings"
 	"time"
 )
@@ -12,14 +14,28 @@ type Claims struct {
 	Id string `json:"id"`
 }
 
-func CreateToken(id string) (string, error) {
+var config = configs.GetConfig()
+
+func CreateAccessToken(id string) (string, error) {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, &Claims{
 		StandardClaims: jwt.StandardClaims{
-			ExpiresAt: time.Now().Add(12 * time.Hour).Unix(),
+			ExpiresAt: time.Now().Add(config.AccessTTL).Unix(),
 		},
 		Id: id,
 	})
-	return token.SignedString([]byte("sadfddKDAJFljaskd7usf"))
+	return token.SignedString([]byte(config.JWTSigningKey))
+}
+
+func CreateRefreshToken(id string) (string, error) {
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, &Claims{
+		StandardClaims: jwt.StandardClaims{
+			ExpiresAt: time.Now().Add(config.RefreshTTL).Unix(),
+		},
+		Id: id,
+	})
+	res, _ := token.SignedString([]byte(config.JWTSigningKey))
+	storage.AddRefreshToken(res, id)
+	return res, nil
 }
 
 func ParseToken(accessToken string) (string, error) {
@@ -27,7 +43,7 @@ func ParseToken(accessToken string) (string, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, errors.New("invalid signing method")
 		}
-		return []byte("sadfddKDAJFljaskd7usf"), nil
+		return []byte(config.JWTSigningKey), nil
 	})
 	if err != nil {
 		return "", err
@@ -49,6 +65,7 @@ func TokenCheck(header string) (string, error) {
 	if len(headerSplit) != 2 {
 		return "", errors.New("error")
 	}
+
 	userID, err := ParseToken(headerSplit[1])
 	if err != nil {
 		return "", errors.New("error")

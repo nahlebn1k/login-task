@@ -11,6 +11,8 @@ type UserLogin struct {
 	Password string `json:"password"`
 }
 
-type Token struct {
-	TokenString string `json:"token"`
+type Tokens struct {
+	Id           string `json:"id"`
+	AccessToken  string `json:"accessToken"`
+	RefreshToken string `json:"refreshToken"`
 }

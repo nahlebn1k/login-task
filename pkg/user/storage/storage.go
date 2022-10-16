@@ -21,3 +21,11 @@ func CreateUser(login, password string) {
 		log.Fatal("Insert data error!")
 	}
 }
+
+func AddRefreshToken(token, id string) {
+	db := postgres.OpenDBConn()
+	_, err := db.Exec("UPDATE users SET refreshtoken = $1 WHERE id = $2", token, id)
+	if err != nil {
+		log.Fatal("insert data error!")
+	}
+}

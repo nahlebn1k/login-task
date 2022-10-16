@@ -3,15 +3,19 @@ package configs
 import (
 	"github.com/spf13/viper"
 	"log"
+	"time"
 )
 
 type Config struct {
-	AppPort string `yaml:"appPort"`
-	DBUser  string `yaml:"dbUser"`
-	DBPass  string `yaml:"dbPass"`
-	DBName  string `yaml:"dbName"`
-	DBPort  string `yaml:"dbPort"`
-	DBHost  string `yaml:"dbHost"`
+	AppPort       string        `yaml:"appPort"`
+	DBUser        string        `yaml:"dbUser"`
+	DBPass        string        `yaml:"dbPass"`
+	DBName        string        `yaml:"dbName"`
+	DBPort        string        `yaml:"dbPort"`
+	DBHost        string        `yaml:"dbHost"`
+	JWTSigningKey string        `yaml:"jwtSigningKey"`
+	AccessTTL     time.Duration `yaml:"accessTTL"`
+	RefreshTTL    time.Duration `yaml:"refreshTTL"`
 }
 
 func InitConfig() error {
