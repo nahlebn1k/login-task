@@ -8,11 +8,6 @@ import (
 	"net/http"
 )
 
-// @Summary     TestUserAuth
-// @Description Check user auth with token
-// @ID          test-auth
-// @Router      /user
-
 func User(w http.ResponseWriter, r *http.Request) {
 	res, err := jwt.TokenCheck(r.Header.Get("Authorization"))
 	if err != nil {
@@ -20,12 +15,6 @@ func User(w http.ResponseWriter, r *http.Request) {
 	}
 	w.Write([]byte(res))
 }
-
-// @Summary     SignUp
-// @Description Signing up user and creates user in db
-// @ID          create-user
-// @Accept      json
-// @Router      /signup
 
 func SignUp(w http.ResponseWriter, r *http.Request) {
 	var user models.UserLogin
@@ -35,13 +24,6 @@ func SignUp(w http.ResponseWriter, r *http.Request) {
 	storage.CreateUser(user.Login, user.Password)
 	w.Write([]byte("OK"))
 }
-
-// @Summary     SignIn
-// @Description Signing in user and give tokens
-// @ID          sign-in
-// @Accept      json
-// @Produce     json
-// @Router      /signin
 
 func SingIn(w http.ResponseWriter, r *http.Request) {
 	var user models.UserLogin
@@ -74,16 +56,19 @@ func SingIn(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-// @Summary     Refresh expired tokens
-// @Description generate new access tokens
-// @ID          refresh-token
-// @Produce     json
-// @Router      /refresh
-
 func RefreshTokens(w http.ResponseWriter, r *http.Request) {
 	var token models.Tokens
 	var err error
+	_, err = jwt.TokenCheck(r.Header.Get("Authorization"))
+	if err != nil {
+		http.Error(w, "invalid auth", http.StatusUnauthorized)
+	}
 	id := r.Header.Get("User")
+	if err != nil || id == "" {
+		http.Error(w, "invalid auth", http.StatusUnauthorized)
+		return
+	}
+
 	token.AccessToken, err = jwt.CreateAccessToken(id)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)

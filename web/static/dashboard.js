@@ -45,11 +45,13 @@ function Logout(){
 
 function Refresh() {
     let user = window.localStorage.getItem("id");
+    let refresh=window.localStorage.getItem("refreshToken")
     let url = window.location.origin + "/refresh";
     fetch(url, {
         method: "POST",
         headers: {
             'Content-Type': 'application/json; charset=UTF-8',
+            'Authorization': refresh,
             'User': user
         }
     }).then(response => {

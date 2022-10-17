@@ -1,0 +1,39 @@
+version: '3.1'
+
+services:
+
+  postgres:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: pass
+      POSTGRES_DB: testdb_task
+    ports:
+      - "5430:5432"
+    networks:
+      - mynet
+
+
+  app:
+    build: .
+    depends_on:
+      - postgres
+    ports:
+      - "8000:8000"
+    networks:
+      - mynet
+
+  swagger:
+    image: swaggerapi/swagger-ui
+    ports:
+      - 8080:8080
+    volumes:
+      - ./docs:/usr/share/nginx/html/docs
+    environment:
+      API_URL: docs/swagger.yaml
+      SWAGGER_YAML: /docs/swagger.yaml
+
+networks:
+  mynet:
+    driver: bridge
