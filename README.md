@@ -13,4 +13,4 @@ DOWN:
 migrate -database postgresql://user:pass@localhost:5430/testdb_task?sslmode=disable -path ./migrations down
 ```
 3. To test app go to `http://localhost:8000`
-4. Watch Swagger dock go to `http://localhost:8080`
+4. Watch Swagger doc go to `http://localhost:8080`
