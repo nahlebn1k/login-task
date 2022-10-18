@@ -35,6 +35,20 @@ paths:
                 '0':
                   value: >
                     {"id":"1","accessToken":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2NjYwMTg0NTcsImlkIjoiMSJ9.o2WUdgr4pzAFQeDGpRel7WNGd5woG1TcUUol82HrNkU","refreshToken":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2NjYxMDQ3OTcsImlkIjoiMSJ9.wpQ1-Abp5gZ9D0lxZaI4gB8v0Nqou9u-rKVi1SvFy5A"}
+        '400':
+          description: Incorrect login pass
+          content:
+            text/plain; charset=utf-8:
+              schema:
+                type: string
+              examples: { }
+        '401':
+          description: invalid auth
+          content:
+            text/plain; charset=utf-8:
+              schema:
+                type: string
+              examples: { }
       servers:
         - url: http://localhost:8000
     servers:
@@ -158,6 +172,13 @@ paths:
       responses:
         '200':
           description: Success registration
+          content:
+            text/plain; charset=utf-8:
+              schema:
+                type: string
+              examples: {}
+        '400':
+          description: Incorrect login pass
           content:
             text/plain; charset=utf-8:
               schema:

@@ -29,3 +29,12 @@ func AddRefreshToken(token, id string) {
 		log.Fatal("insert data error!")
 	}
 }
+
+func GetRefreshToken(id string) (string, error) {
+	db := postgres.OpenDBConn()
+	var tokenVar string
+	if err := db.Get(&tokenVar, "SELECT refreshtoken FROM users WHERE id=$1", id); err != nil {
+		return "", err
+	}
+	return tokenVar, nil
+}

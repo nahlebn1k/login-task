@@ -45,7 +45,7 @@ function Logout(){
 
 function Refresh() {
     let user = window.localStorage.getItem("id");
-    let refresh=window.localStorage.getItem("refreshToken")
+    let refresh="Bearer "+window.localStorage.getItem("refreshToken")
     let url = window.location.origin + "/refresh";
     fetch(url, {
         method: "POST",
