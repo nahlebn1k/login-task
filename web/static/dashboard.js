@@ -29,7 +29,6 @@ function TestAuth(){
             }).then(obj=>{
                 Refresh();
                 text.innerHTML=`<h1>WELCOME USER #${obj}</h1>`;
-                //Refresh();
             })
         }
         return response.text();

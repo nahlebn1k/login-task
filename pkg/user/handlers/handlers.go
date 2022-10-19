@@ -13,17 +13,23 @@ func User(w http.ResponseWriter, r *http.Request) {
 	res, err := jwt.TokenCheck(r.Header.Get("Authorization"))
 	if err != nil {
 		http.Error(w, "invalid auth", http.StatusUnauthorized)
+		return
 	}
-	w.Write([]byte(res))
+	if _, err := w.Write([]byte(res)); err != nil {
+		http.Error(w, err.Error(), http.StatusUnauthorized)
+	}
 }
 
 func SignUp(w http.ResponseWriter, r *http.Request) {
 	var user models.UserLogin
 	if err := json.NewDecoder(r.Body).Decode(&user); err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
 	}
-	storage.CreateUser(user.Login, user.Password)
-	w.Write([]byte("OK"))
+	if err := storage.CreateUser(user.Login, user.Password); err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
 }
 
 func SingIn(w http.ResponseWriter, r *http.Request) {
@@ -31,6 +37,7 @@ func SingIn(w http.ResponseWriter, r *http.Request) {
 	var token models.Tokens
 	if err := json.NewDecoder(r.Body).Decode(&user); err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
 	}
 
 	id, err := storage.GetUser(user.Login, user.Password)
@@ -42,18 +49,21 @@ func SingIn(w http.ResponseWriter, r *http.Request) {
 	token.AccessToken, err = jwt.CreateAccessToken(id)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
 	}
 
 	token.RefreshToken, err = jwt.CreateRefreshToken(id)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
 	}
-	token.Id = id
+	token.ID = id
 
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusAccepted)
 	if err := json.NewEncoder(w).Encode(token); err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
 	}
 }
 
@@ -65,6 +75,7 @@ func RefreshTokens(w http.ResponseWriter, r *http.Request) {
 	_, err = jwt.TokenCheck(r.Header.Get("Authorization"))
 	if err != nil {
 		http.Error(w, "invalid auth", http.StatusUnauthorized)
+		return
 	}
 	id := r.Header.Get("User")
 	if err != nil || id == "" {
@@ -87,15 +98,18 @@ func RefreshTokens(w http.ResponseWriter, r *http.Request) {
 	token.AccessToken, err = jwt.CreateAccessToken(id)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
 	}
 	token.RefreshToken, err = jwt.CreateRefreshToken(id)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
 	}
-	token.Id = idResp
+	token.ID = idResp
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusAccepted)
 	if err := json.NewEncoder(w).Encode(token); err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
 	}
 }

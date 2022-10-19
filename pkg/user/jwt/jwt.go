@@ -11,7 +11,7 @@ import (
 
 type Claims struct {
 	jwt.StandardClaims
-	Id string `json:"id"`
+	ID string `json:"id"`
 }
 
 var config = configs.GetConfig()
@@ -21,7 +21,7 @@ func CreateAccessToken(id string) (string, error) {
 		StandardClaims: jwt.StandardClaims{
 			ExpiresAt: time.Now().Add(config.AccessTTL).Unix(),
 		},
-		Id: id,
+		ID: id,
 	})
 	return token.SignedString([]byte(config.JWTSigningKey))
 }
@@ -31,10 +31,12 @@ func CreateRefreshToken(id string) (string, error) {
 		StandardClaims: jwt.StandardClaims{
 			ExpiresAt: time.Now().Add(config.RefreshTTL).Unix(),
 		},
-		Id: id,
+		ID: id,
 	})
 	res, _ := token.SignedString([]byte(config.JWTSigningKey))
-	storage.AddRefreshToken(res, id)
+	if err := storage.AddRefreshToken(res, id); err != nil {
+		return "", err
+	}
 	return res, nil
 }
 
@@ -53,7 +55,7 @@ func ParseToken(accessToken string) (string, error) {
 	if !ok {
 		return "", nil
 	}
-	return claims.Id, nil
+	return claims.ID, nil
 }
 
 func TokenCheck(header string) (string, error) {
